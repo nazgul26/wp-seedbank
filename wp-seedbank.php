@@ -478,6 +478,10 @@ class WP_SeedBank {
         wp_enqueue_script('wp-seedbank');
         $x = $wp_scripts->query('jquery-ui-core');
         wp_enqueue_style('jquery-ui-smoothness', "//ajax.googleapis.com/ajax/libs/jqueryui/{$x->ver}/themes/smoothness/jquery-ui.min.css", false, null);
+
+        
+        wp_register_style( 'wp-seedbank', plugins_url('wp-seedbank.css', __FILE__) );
+        wp_enqueue_style('wp-seedbank');
     }
 
     public function registerCustomColumns ($columns) {
