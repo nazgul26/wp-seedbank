@@ -1,4 +1,10 @@
 .wp-list-table .column-comments  {
     display: none;
 }
+.wp-list-table .column-taxonomy-seedbank_scientific_name {
+    display: none;   
+}
+.wp-list-table .column-seedbank_seed_expiry_date {
+    display: none;  
+}
 

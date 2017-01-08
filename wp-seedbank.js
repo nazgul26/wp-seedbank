@@ -11,53 +11,41 @@ WP_SEEDBANK.UI.attachDatepicker = function () {
     }
 };
 
-WP_SEEDBANK.UI.hideDeletedExchangeRequests = function () {
-    var el = document.createElement('button');
-    el.innerHTML = 'Hide Deleted Seed Exchanges';
-    jQuery(el).click(function (e) {
+WP_SEEDBANK.UI.setupExchangePostVisibilityButton = function (state) {
+    var showHideButton = document.createElement('button');
+    showHideButton.setAttribute("class", "button" );
+    showHideButton.innerHTML = state + ' Deleted Seed Exchanges';
+    
+    jQuery(showHideButton).click(function (e) {
         e.preventDefault();
-        jQuery('.taxonomy-seedbank_exchange_status').each(function() {
-            if(jQuery(this).text() != "Active") {
-                jQuery(this).parent().hide();
-            }
-        });
-        WP_SEEDBANK.UI.toggleDeletedExchangePostVisibility('show');
+        WP_SEEDBANK.UI.toggleDeletedExchangePostVisibility(state);
+        if (state == "Hide") {
+            WP_SEEDBANK.UI.setupExchangePostVisibilityButton('Show');
+        } else {
+            WP_SEEDBANK.UI.setupExchangePostVisibilityButton('Hide');
+        }
         jQuery(this).remove();
     });
+    
     var x = document.getElementById('post-query-submit');
     if (x && x.parentNode) {
-        x.parentNode.appendChild(el);
-    }
-};
-WP_SEEDBANK.UI.showDeletedExchangeRequests = function () {
-    var el = document.createElement('button');
-    el.innerHTML = 'Show Deleted Seed Exchanges';
-    jQuery(el).click(function (e) {
-        e.preventDefault();
-        jQuery('.taxonomy-seedbank_exchange_status').each(function() {
-            if(jQuery(this).text() == "Deleted") {
-                jQuery(this).parent().show();
-            }
-        });
-        jQuery(this).remove();
-        WP_SEEDBANK.UI.toggleDeletedExchangePostVisibility('hide');
-    });
-    var x = document.getElementById('post-query-submit');
-    if (x && x.parentNode) {
-        x.parentNode.appendChild(el);
+        x.parentNode.appendChild(showHideButton);
     }
 };
 
 WP_SEEDBANK.UI.toggleDeletedExchangePostVisibility = function (state) {
-    switch (state) {
-        case 'hide':
-            WP_SEEDBANK.UI.hideDeletedExchangeRequests();
-        break;
-        case 'show':
-            WP_SEEDBANK.UI.showDeletedExchangeRequests();
-        break;
-    }
-};
+    jQuery('.taxonomy-seedbank_exchange_status').each(function() {
+        if (state == "Hide") {
+            if(jQuery(this).text() != "Active") {
+                jQuery(this).parent().hide();
+            }
+        } else {
+            if(jQuery(this).text() == "Deleted") {
+                jQuery(this).parent().show();
+            }
+        }
+    });
+}
 
 WP_SEEDBANK.UI.toggleBatchExchangeDataSource = function () {
     jQuery('#seedbank-batch-exchange-file-upload').hide();
@@ -107,7 +95,8 @@ WP_SEEDBANK.init = function () {
     WP_SEEDBANK.UI.attachDatepicker();
     WP_SEEDBANK.UI.toggleBatchExchangeDataSource();
     // TODO: Filter these out of the result set from the PHP at some point, eh?
-    WP_SEEDBANK.UI.toggleDeletedExchangePostVisibility('hide');
+    WP_SEEDBANK.UI.toggleDeletedExchangePostVisibility('Hide');
+    WP_SEEDBANK.UI.setupExchangePostVisibilityButton('Show');
     WP_SEEDBANK.UI.prefillScientificName();
 };
 
